@@ -1,0 +1,68 @@
+ INSTRUCTIONS TO RUN (v4 - stable CMD parsing)
+
+Key fixes vs earlier versions:
+1) Fixes ". was unexpected at this time." by:
+   - Using CALL SET "FLAGS=%%*" after SHIFT (so remaining args are captured correctly).
+   - Avoiding IF ( ... ) ELSE ( ... ) blocks for the Java command.
+2) Fixes JSP directory detection on some machines:
+   - Uses PUSHD to verify the directory exists.
+3) avoids SHIFT/%* pitfalls by using %5..%9 for flags
+4) prints the exact java command line
+5) prints all positional args and flags
+Root cause of ". was unexpected at this time.":
+- In CMD, the sequence "echo ... -> ..." contains '>' which is a redirection operator.
+  Inside parentheses blocks (IF exist (...) ( ... )), CMD can mis-parse and throw the error.
+- We replaced arrows with text that does NOT include '>' (e.g., "- renaming to").
+Also:
+- On your machine, "if exist <dir>\NUL" returns FALSE, so we use PUSHD to detect a directory.
+
+RECOMMENDED CMD SYNTAX FOR EXTENSIONS:
+- Use two tokens (Java supports both):
+    --exts ".java,.jsp,.xml,.properties,.yml,.yaml" --debug
+
+IMPORTANT:
+- Always pass --exts as a SINGLE token using commas:
+  --exts=".java,.jsp,.xml,.properties,.yml,.yaml"
+
+------------------------------- FPMS -------------------------------
+1) CORE SCAN
+run_scan_v4.bat analysis_core_v4.csv "D:\Users\kosambia\jdk21\fpms-src\src" "D:\Users\kosambia\jdk21\fpms-src\ls_web" fpms --exts=".java,.jsp,.xml,.properties,.yml,.yaml" --debug
+
+2) THIRD PARTY + LIB INVENTORY
+run_scan_v4.bat analysis_3rdparty_v4.csv "D:\Users\kosambia\jdk21\fpms-src\src" "D:\Users\kosambia\jdk21\fpms-src\ls_web" fpms --libDir="D:\Users\kosambia\jdk21\fpms-src\lib\combined_lib" --exts=".java,.jsp,.xml,.properties,.yml,.yaml" --debug
+
+3) THIRD PARTY SCAN (normalize regex - only if needed)
+run_scan_v4.bat analysis_3rdparty_v4.csv "D:\Users\kosambia\jdk21\fpms-src\src" "D:\Users\kosambia\jdk21\fpms-src\ls_web" fpms --normalizeRegex --exts=".java,.jsp,.xml,.properties,.yml,.yaml" --debug
+
+--------------------------------------------------------------------
+
+------------------------------- MS -------------------------------
+1) CORE SCAN
+run_scan_v4.bat analysis_core_v4.csv "D:\Users\kosambia\jdk21\ms-src" "" batch-ms --exts=".java,.xml,.properties,.yml,.yaml" --debug
+
+2) THIRD PARTY + LIB INVENTORY
+run_scan_v4.bat analysis_3rdparty_v4.csv "D:\Users\kosambia\jdk21\ms-src" "" batch-ms --libDir="D:\Users\kosambia\jdk21\ms-src\implementation" --exts=".java,.xml,.properties,.yml,.yaml" --debug
+
+3) THIRD PARTY SCAN (normalize regex - only if needed)
+run_scan_v4.bat analysis_3rdparty_v4.csv "D:\Users\kosambia\jdk21\ms-src" "" batch-ms --normalizeRegex --exts=".java,.xml,.properties,.yml,.yaml" --debug
+
+--------------------------------------------------------------------
+
+------------------------------- LP QUERY -------------------------------
+1) CORE SCAN
+run_scan_v4.bat analysis_core_v4.csv "D:\Users\kosambia\jdk21\lpquery-src" "" lpquery --exts=".java,.xml,.properties,.yml,.yaml" --debug
+
+2) THIRD PARTY + LIB INVENTORY
+run_scan_v4.bat analysis_3rdparty_v4.csv "D:\Users\kosambia\jdk21\lpquery-src" "" lpquery --libDir="D:\Users\kosambia\jdk21\lpquery-src" --exts=".java,.xml,.properties,.yml,.yaml" --debug
+
+3) THIRD PARTY SCAN (normalize regex - only if needed)
+run_scan_v4.bat analysis_3rdparty_v4.csv "D:\Users\kosambia\jdk21\ms-src" "" lpquery --normalizeRegex --exts=".java,.xml,.properties,.yml,.yaml" --debug
+
+--------------------------------------------------------------------
+
+
+
+
+Expected outputs:
+- Report:      <AppName>-src-migration-report_<YYYYMMDD_HHMMSS>.txt
+- Findings CSV: <AppName>-src-output_<YYYYMMDD_HHMMSS>.csv
