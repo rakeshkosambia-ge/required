@@ -1,2 +1,0 @@
-PatternID,PatternSet,PatternNature,PatternName,PatternDescription,RegexPattern,Priority,Category,Fix,Remediation,RemediationDescription,RemediationEffort,Mandays,JDK8Compatible,JDK21Compatible,CompatibilityStatus,PlanFirstChange,ScriptableBySearchReplace,CompatibilityRuleHint
-115,Set 11,SPRINGBOOT (LOGGING - Legacy),Log4j 1.x usage,Log4j 1.x is EOL / incompatible.,\borg\.apache\.log4j\.,High,Logging,Use SLF4J + Logback or Log4j2.,Manual-Remove/Replace,Migrate Log4j 1.x to SLF4J + Logback or Log4j2.,Medium,2,Yes,No,Requires Migration,No,No,Dual-NeedsMigration
