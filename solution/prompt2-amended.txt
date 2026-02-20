@@ -1,0 +1,7 @@
+Sorry it needs to run on my windows laptops in bat file which can be executed in command window and not in powershell as my laptop cannot run powershell.
+
+Now help regenerate as it should have provision to pass parameter as dryrun or actualrun if dryrun then just copy the files from fpms_module and create folder inside fpms_module as PHASE1_BATCH1 based on parameter passed for which phase and batch 
+
+Then if actualrun then use dmcli script to checkout code from dimension and ger a cooy into fpms_module inside folder PHASE1_BATCH1 to perform the changes in the folder then after all verification and successfully compilation on both jdk8 and jdk21 then check in via dmcli script.
+
+Please help regenerate again
